@@ -1,0 +1,244 @@
+#region Imports
+
+import tkinter
+from tkinter import *
+from tkinter import ttk
+from tkinter import messagebox
+import os.path
+from os import path
+
+
+#endregion Imports
+
+#region Setup Defines
+
+#Check for the gradebook file
+
+def fileCheck():
+    print ("File exists: " + str(path.exists("Code\\CSET4250Final\\db.json")))
+
+    #Create the file if it doesn't exist
+    if str(path.exists("Code\\CSET4250Final\\db.json")) == "False":
+        print("Making a new file")
+        with open("Code\\CSET4250Final\\db.json", "w") as write_file:
+
+
+#endregion Setup Defines
+
+#region Tab 1 Defines
+
+#Search for Student's grade
+def submit1():
+    acceptable = True
+    while acceptable == True:
+        #Students name
+        spaceFinder = " "
+        studentName = nameEntry1.get()
+        if studentName.find(spaceFinder) == -1:
+                messagebox.showerror(title = "Invalid Name", message = "Please use the student's first and last name")
+                break
+
+        #Subject Choice
+        if x.get() == 0:
+                subjectSelection1 = "Math"
+        if x.get() == 1:
+                subjectSelection1 = "Science"
+        if x.get() == 2:
+                subjectSelection1 = "History"
+        
+        #Show Input
+        messagebox.showinfo(title = "Student's Grade", message = "Student: " + studentName + "\nSubject: " + subjectSelection1 + "\nExam Grade: " + "\nHomework Grade: " + "\nTotal Grade: ")
+
+#Clear all text
+def clear1():
+    nameEntry1.delete(0,END)
+
+#endregion Tab 1 Defines
+
+#region Tab 2 Defines
+
+#Enter in a new grade
+def submit2():
+    acceptable = True
+    spaceFinder = " "
+    while acceptable == True:
+        #Students name
+        studentName = nameEntry2.get()
+        if studentName.find(spaceFinder) == -1:
+            messagebox.showerror(title = "Invalid Name", message = "Please use the student's first and last name")
+            break
+
+
+        #Subject Choice
+        if y.get() == 0:
+                subjectSelection2 = "Math"
+        if y.get() == 1:
+                subjectSelection2 = "Science"
+        if y.get() == 2:
+                subjectSelection2 = "History"
+
+        #Work Type
+        if z.get() == 0:
+                workSelection2 = "Homework"
+        if z.get() == 1:
+                workSelection2 = "Exam"
+
+        #Assignment Name
+        assignmentName = assignmentEntry2.get()
+
+        #Grade
+        assignmentGrade = gradeEntry2.get()
+        try:
+            gradeCheck = int(assignmentGrade)
+        except ValueError:
+            messagebox.showerror(title = "Invalid Grade", message = "The grade you entered was invalid.\nPlease use a number between 0 and 100.")
+            break
+        if gradeCheck > 100 or gradeCheck < 0:
+            messagebox.showerror(title = "Invalid Grade", message = "The grade you entered was invalid.\nPlease use a number between 0 and 100.")
+            break
+
+        #Show message 
+        messagebox.showinfo(title = "Assingment Added", message = "Student: " + studentName + "\nSubject: " + subjectSelection2 + "\nWork Type: " 
+                            + workSelection2 + "\nAssingment Name: " + assignmentName + "\nGrade: " + assignmentGrade + "%")
+
+        #Append Gradebook file
+        if acceptable == True:
+            
+            break
+
+#Clear all text
+def clear2():
+    nameEntry2.delete(0,END)
+    assignmentEntry2.delete(0,END)
+    gradeEntry2.delete(0,END)
+
+#endregion Tab 2 Defines
+
+#region Program Setup
+fileCheck()
+
+#Radio button Arrays
+subjects = ["     Math     ", "Science", "History"]
+workType = ["Homework", "  Exam  "]
+
+#create the window
+window = Tk() 
+window.geometry("427x275")
+window.title("Gradebook")
+window.config(background="#092129")
+
+#Tabs
+notebook = ttk.Notebook(window, style = "TNotebook")
+
+tab1 = Frame(notebook, bg = "#1c6b85")
+tab2 = Frame(notebook, bg = "#1c6b85")
+
+notebook.add(tab1, text = "View Grade")
+notebook.add(tab2, text = "Enter Grade")
+notebook.grid(row = 0, column = 0, columnspan = 2)
+
+#endregion Program Setup
+
+#region Tab 1
+
+#Title
+titleLabel1 = Label(tab1, text = "View Grade", font = ("Arial", 25), width = 22, height = 1, fg = "#ffffff", bg = "#1c6b85")
+titleLabel1.grid(row = 1, column = 0, columnspan = 4)
+
+#Student's name
+nameLabel1 = Label(tab1, text = "Student's Full Name: ", width = 16, height = 2, fg = "#ffffff", bg = "#1c6b85")
+nameLabel1.grid(row = 2, column = 0)
+
+nameEntry1 = Entry(tab1, font = ("Arial", 20), fg = "#ffffff", bg = "#144c5e")
+nameEntry1.grid(row = 2, column = 1, columnspan = 3)
+
+#Subject choice
+subjectLabel1 = Label(tab1, text = "Subject Name: ", width = 16, height = 2, fg = "#ffffff", bg = "#1c6b85")
+subjectLabel1.grid(row = 3, column = 0)
+
+x = IntVar()
+
+for index in range(len(subjects)):
+    subjectRadio = Radiobutton(tab1, text=subjects[index], variable = x, value = index)
+    if index == 0:
+        subjectRadio.grid(row = 3, column = 1, padx = 3)
+    if index == 1:
+        subjectRadio.grid(row = 3, column = 2, padx = 7)
+    if index == 2:
+        subjectRadio.grid(row = 3, column = 3, padx = 10)
+
+
+#Submit and Clear buttons
+submit_button1 = Button(tab1, text = "Submit", command = submit1, fg = "#ffffff", bg = "#1c6b85")
+submit_button1.grid(row = 4, column = 0, columnspan = 3)
+
+clear_button1 = Button(tab1, text = "Clear", command = clear1, fg = "#ffffff", bg = "#1c6b85")
+clear_button1.grid(row = 4, column = 1, columnspan = 3)
+
+#endregion Tab 1
+
+#region Tab 2
+#Title
+titleLabel2 = Label(tab2, text = "Submit New Grade", font = ("Arial", 25), width = 22, height = 1, fg = "#ffffff", bg = "#1c6b85")
+titleLabel2.grid(row = 1, column = 0, columnspan = 4)
+
+#Student's name
+nameLabel2 = Label(tab2, text = "Student's Full Name: ", width = 16, height = 2, fg = "#ffffff", bg = "#1c6b85")
+nameLabel2.grid(row = 2, column = 0)
+
+nameEntry2 = Entry(tab2, font = ("Arial", 20), fg = "#ffffff", bg = "#144c5e")
+nameEntry2.grid(row = 2, column = 1, columnspan = 3)
+
+#Subject Choice
+subjectLabel2 = Label(tab2, text = "Subject Name: ", width = 16, height = 2, fg = "#ffffff", bg = "#1c6b85")
+subjectLabel2.grid(row = 3, column = 0)
+
+y = IntVar()
+
+for index in range(len(subjects)):
+    subjectRadio = Radiobutton(tab2, text=subjects[index], variable = y, value = index)
+    if index == 0:
+        subjectRadio.grid(row = 3, column = 1, padx = 3)
+    if index == 1:
+        subjectRadio.grid(row = 3, column = 2, padx = 7)
+    if index == 2:
+        subjectRadio.grid(row = 3, column = 3, padx = 10)
+
+#Work type choice
+workLabel2 = Label(tab2, text = "Work Type: ", width = 16, height = 2, fg = "#ffffff", bg = "#1c6b85")
+workLabel2.grid(row = 4, column = 0)
+
+z = IntVar()
+
+for index in range(len(workType)):
+    subjectRadio = Radiobutton(tab2, text=workType[index], variable = z, value = index)
+    if index == 0:
+        subjectRadio.grid(row = 4, column = 1, padx = 3, pady = 5)
+    if index == 1:
+        subjectRadio.grid(row = 4, column = 2, padx = 7, pady = 5)
+
+#Assignment name
+assignmentLabel2 = Label(tab2, text = "Assignment Name: ", width = 16, height = 2, fg = "#ffffff", bg = "#1c6b85")
+assignmentLabel2.grid(row = 5, column = 0)
+
+assignmentEntry2 = Entry(tab2, font = ("Arial", 20), fg = "#ffffff", bg = "#144c5e")
+assignmentEntry2.grid(row = 5, column = 1, columnspan = 3)
+
+#Student's grade
+gradeLabel2 = Label(tab2, text = "Grade (Out of 100): ", width = 16, height = 2, fg = "#ffffff", bg = "#1c6b85")
+gradeLabel2.grid(row = 6, column = 0)
+
+gradeEntry2 = Entry(tab2, font = ("Arial", 20), fg = "#ffffff", bg = "#144c5e")
+gradeEntry2.grid(row = 6, column = 1, columnspan = 3)
+
+#Submit and Clear buttons
+submit_button2 = Button(tab2, text = "Submit", command = submit2, fg = "#ffffff", bg = "#1c6b85")
+submit_button2.grid(row = 7, column = 0, columnspan = 3)
+
+clear_button2 = Button(tab2, text = "Clear", command = clear2, fg = "#ffffff", bg = "#1c6b85")
+clear_button2.grid(row = 7, column = 1, columnspan = 3)
+
+#endregion Tab 2
+
+#show window
+window.mainloop() 
